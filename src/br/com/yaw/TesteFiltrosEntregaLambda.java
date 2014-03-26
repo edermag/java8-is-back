@@ -1,5 +1,10 @@
 package br.com.yaw;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 /**
  * Exemplo da nova API de Stream com Lambda e Collections do Java.
@@ -12,16 +17,27 @@ package br.com.yaw;
 public class TesteFiltrosEntregaLambda {
 
 	public static void main(String[] args) {
-		//testar runtime
-		/*List<String> nomes = Arrays.asList("Claudia", "Danilo", "Fernanda", "Paula", "Andre", "Bruna");
+		List<String> produtos = Arrays.asList("Livro");
+		List<Entrega> entregas = buildEntregas();
 		
-		List<Person> people = peopleDAO.find("London"); 
+		List<Entrega> entregasMatch = 
+				entregas.stream()
+					.filter( e -> (produtos.stream().anyMatch(e.getProduto()::contains)) )
+					.collect(Collectors.toList());
 		
-		// Using anyMatch and method reference 
-		List<Person> anyMatch = people.stream().filter(p -> (names.stream().anyMatch(p.name::contains))).collect(Collectors.toList()); 
-		  
-		// Using reduce 
-		List<Person> reduced = people.stream().filter(p -> names.stream().reduce(false, (Boolean b, String keyword) -> b || p.name.contains(keyword), (l, r) -> l | r)).collect(Collectors.toList());*/
+		entregasMatch.forEach(System.out::println);
 	}
 	
+	static List<Entrega> buildEntregas() {
+		LocalDateTime hoje = LocalDateTime.now();
+		LocalDateTime ontem = hoje.minusDays(1);
+		LocalDateTime amanha = hoje.plusDays(1);
+		return Arrays.asList(
+				new Entrega("Camiseta", 170.0, amanha),
+				new Entrega("DVD", 70.0, hoje),
+				new Entrega("Livro Java", 94.0, ontem),
+				new Entrega("Livro Programação", 94.0, ontem),
+				new Entrega("Notebook", 1990.0, ontem),
+				new Entrega("Vinho", 68.0, hoje));
+	}
 }
